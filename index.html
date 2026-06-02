@@ -795,6 +795,7 @@ function buildMonthData(year, month){
     if(note){ const icons={vacation:'Dovolená',sick:'Nemoc',trip:'Služební cesta',custom:''}; poznamka=(icons[note.type]||'')+( note.text?' '+note.text:''); }
     else if(isHoliday) poznamka = hname;
 
+    const nettoMins = mins>0 ? Math.max(0, mins-30) : 0;
     rows.push({
       iso, d, dayName, isWe, isHoliday,
       datum: d+'. '+(month+1)+'. '+year,
@@ -803,6 +804,8 @@ function buildMonthData(year, month){
       odchod: entry ? entry.departure : '',
       odpracovano: mins>0 ? fmtDurLong(mins) : '',
       odpracovanoMins: mins,
+      netto: nettoMins>0 ? fmtDurLong(nettoMins) : '',
+      nettoMins,
       misto: entry ? (entry.loc==='office'?'Kancelář':'Homeoffice') : '',
       poznamka
     });
@@ -822,8 +825,8 @@ function applySheetStyles(ws, rows, startRow){
   const TOTAL_BG  = 'F5EDD0';  // gold total
   const EMPTY_BG  = 'FFFFFF';
 
-  const cols = ['A','B','C','D','E','F','G'];
-  ws['!cols'] = [14,12,9,9,16,14,30].map(w=>({wch:w}));
+  const cols = ['A','B','C','D','E','F','G','H'];
+  ws['!cols'] = [14,12,9,9,16,16,14,30].map(w=>({wch:w}));
 
   // Header
   cols.forEach(col=>{
@@ -878,24 +881,25 @@ function buildWorksheet(year, month){
   const wsData = [];
 
   // Title rows
-  wsData.push([MONTHS_CZ[month]+' '+year,'','','','','','']);
-  wsData.push([userName?'Zaměstnanec: '+userName:'','','','','','','']);
+  wsData.push([MONTHS_CZ[month]+' '+year,'','','','','','','']);
+  wsData.push([userName?'Zaměstnanec: '+userName:'','','','','','','','']);
   wsData.push([]); // empty
   // Header
-  wsData.push(['Datum','Den','Příchod','Odchod','Odpracováno','Místo','Poznámka']);
+  wsData.push(['Datum','Den','Příchod','Odchod','Odpracováno','Netto (−30 min)','Místo','Poznámka']);
   // Data rows
   rows.forEach(row=>{
-    wsData.push([row.datum, row.den, row.prichod, row.odchod, row.odpracovano, row.misto, row.poznamka]);
+    wsData.push([row.datum, row.den, row.prichod, row.odchod, row.odpracovano, row.netto, row.misto, row.poznamka]);
   });
   // Total
-  wsData.push(['CELKEM','','','',fmtDurLong(totalMins),'','']);
+  const totalNetto=rows.reduce((s,r)=>s+r.nettoMins,0);
+  wsData.push(['CELKEM','','','',fmtDurLong(totalMins),fmtDurLong(totalNetto),'','']);
 
   const ws = XLSX.utils.aoa_to_sheet(wsData);
 
   // Merges: title + subtitle
   ws['!merges'] = [
-    {s:{r:0,c:0},e:{r:0,c:6}},
-    {s:{r:1,c:0},e:{r:1,c:6}}
+    {s:{r:0,c:0},e:{r:0,c:7}},
+    {s:{r:1,c:0},e:{r:1,c:7}}
   ];
 
   // Title style
