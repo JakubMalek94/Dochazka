@@ -11,14 +11,14 @@
 <script src="https://cdn.jsdelivr.net/npm/xlsx-js-style@1.2.0/dist/xlsx.bundle.js"></script>
 <link rel="apple-touch-icon" href="#" id="apple-icon">
 <style>
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap');
+
 :root {
   --gold:#9A7010;--gold-bg:#FDF0C0;--gold-border:#D4A820;--gold-text:#6B4D08;
   --teal:#006B78;--teal-bg:#C8EDEF;--teal-border:#4DBFCA;--teal-text:#004450;
   --red:#B83030;--bg:#F7F6F3;--card:#FFFFFF;--border:#E0DDD8;--border2:#C8C5BF;
   --txt:#1A1A1A;--txt2:#6B6B6B;--txt3:#9A9A9A;--r:14px;--rs:10px;
-  --font:'DM Sans',-apple-system,BlinkMacSystemFont,sans-serif;
-  --mono:'DM Mono','Courier New',monospace;
+  --font:Verdana,Geneva,sans-serif;
+  --mono:Verdana,Geneva,sans-serif;
   --tabbar:64px;
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
@@ -27,7 +27,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--txt);min-height:10
 .page{position:fixed;inset:0;bottom:var(--tabbar);background:var(--bg);overflow-y:auto;transition:transform .3s cubic-bezier(.4,0,.2,1);}
 .page.hidden{transform:translateX(100%);pointer-events:none;}
 
-.topbar{background:var(--gold-border);padding:14px 16px 12px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:10;}
+.topbar{background:#C8A450;padding:14px 16px 12px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:10;}
 .topbar .app-name{font-size:17px;font-weight:600;color:#1A1A1A;letter-spacing:-.01em;flex:1;}
 
 .tabbar{position:fixed;bottom:0;left:0;right:0;height:var(--tabbar);background:var(--card);border-top:1px solid var(--border);display:flex;z-index:20;}
@@ -117,7 +117,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--txt);min-height:10
 
 /* calendar grid */
 .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;}
-.cal-day{min-height:62px;border-radius:8px;padding:5px 4px 4px;cursor:pointer;border:1px solid transparent;transition:all .12s;display:flex;flex-direction:column;background:var(--card);position:relative;}
+.cal-day{height:84px;border-radius:8px;padding:5px 4px 4px;cursor:pointer;border:1px solid transparent;transition:all .12s;display:flex;flex-direction:column;background:var(--card);position:relative;overflow:hidden;}
 .cal-day:active{transform:scale(.95);}
 .cal-day.empty{background:transparent;border-color:transparent;cursor:default;pointer-events:none;}
 .cal-day.today{border-color:var(--teal-border);border-width:2px;}
@@ -125,18 +125,23 @@ body{font-family:var(--font);background:var(--bg);color:var(--txt);min-height:10
 .cal-day.holiday{background:#FEF5F5;}
 .cal-day.has-entry-office{background:var(--gold-bg);border-color:var(--gold-border);}
 .cal-day.has-entry-home{background:var(--teal-bg);border-color:var(--teal-border);}
-.cal-day.has-note{background:#F5F0FE;border-color:#C4B0F0;}
+.cal-day.has-note{background:#EFEDE6;border-color:#C8C5BC;}
+.cal-day.has-mixed-office{border-color:var(--gold-border);}
+.cal-day.has-mixed-home{border-color:var(--teal-border);}
 .cal-day .cd-num{font-size:13px;font-weight:600;color:var(--txt2);line-height:1;margin-bottom:3px;}
 .cal-day.today .cd-num{color:var(--teal);font-weight:700;}
 .cal-day.weekend .cd-num,.cal-day.holiday .cd-num{color:#C0392B;}
-.cal-day.has-entry-office .cd-num{color:var(--gold-text);}
-.cal-day.has-entry-home .cd-num{color:var(--teal-text);}
-.cal-day.has-entry-office .cd-arr,.cal-day.has-entry-office .cd-dep,.cal-day.has-entry-office .cd-dur{color:var(--gold-text);}
+.cal-day.has-entry-office .cd-num,.cal-day.has-mixed-office .cd-num{color:var(--gold-text);}
+.cal-day.has-entry-home .cd-num,.cal-day.has-mixed-home .cd-num{color:var(--teal-text);}
+.cal-day.has-entry-office .cd-arr,.cal-day.has-entry-office .cd-dep,.cal-day.has-entry-office .cd-dur,
+.cal-day.has-mixed-office .cd-arr,.cal-day.has-mixed-office .cd-dep,.cal-day.has-mixed-office .cd-dur{color:var(--gold-text);}
+.cal-day.has-mixed-home .cd-arr,.cal-day.has-mixed-home .cd-dep,.cal-day.has-mixed-home .cd-dur{color:var(--teal-text);}
 .cal-day .cd-arr{font-family:var(--mono);font-size:9px;color:var(--teal-text);line-height:1.3;}
 .cal-day .cd-dep{font-family:var(--mono);font-size:9px;color:var(--teal-text);line-height:1.3;}
-.cal-day .cd-note{font-size:9px;color:#7B5EA7;line-height:1.2;margin-top:1px;word-break:break-word;}
+.cal-day .cd-note{font-size:8.5px;color:#5A5A5A;line-height:1.25;margin-top:auto;}
 .cal-day .cd-hday{font-size:8px;color:#C0392B;line-height:1.2;margin-top:1px;}
 .cal-day .cd-dur{font-size:8px;color:var(--teal);margin-top:auto;font-family:var(--mono);}
+.cal-day.has-mixed-office .cd-dur{color:var(--gold-text);}
 
 /* month summary */
 .cal-summary{margin-top:12px;background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:.85rem 1rem;display:flex;gap:0;}
@@ -168,8 +173,14 @@ body{font-family:var(--font);background:var(--bg);color:var(--txt);min-height:10
 /* note type chips */
 .sf-note-chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;}
 .sf-chip{padding:6px 12px;border-radius:20px;border:1px solid var(--border);background:var(--bg);cursor:pointer;font-size:12px;font-weight:500;color:var(--txt2);font-family:var(--font);}
-.sf-chip.sel{background:#F0EBFE;border-color:#C4B0F0;color:#5B3FA6;font-weight:600;}
+.sf-chip.sel{background:#EFEDE6;border-color:#C8C5BC;color:#4A4A4A;font-weight:600;}
 .sf-note-input{width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--txt);font-size:14px;font-family:var(--font);margin-bottom:14px;resize:none;}
+.sf-hours-row{display:flex;align-items:center;gap:8px;margin-bottom:14px;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:8px 12px;}
+.sf-hours-label{font-size:12px;font-weight:600;color:var(--txt2);flex:1;}
+.sf-hours-ctrl{display:flex;align-items:center;gap:6px;}
+.sf-hours-btn{width:30px;height:30px;border-radius:8px;border:1px solid var(--border);background:var(--card);cursor:pointer;font-size:18px;font-weight:500;color:var(--txt);display:flex;align-items:center;justify-content:center;font-family:var(--font);}
+.sf-hours-btn:active{background:var(--border);}
+.sf-hours-val{font-family:var(--mono);font-size:16px;font-weight:500;color:var(--txt);min-width:42px;text-align:center;}
 
 .sheet-save{width:100%;padding:13px;border-radius:var(--rs);font-size:14px;font-weight:600;cursor:pointer;font-family:var(--font);background:var(--teal);color:#fff;border:none;margin-bottom:8px;}
 .sheet-save:active{filter:brightness(.9);}
@@ -181,6 +192,22 @@ body{font-family:var(--font);background:var(--bg);color:var(--txt);min-height:10
 .export-btn{flex:1;padding:11px 8px;border-radius:var(--rs);font-size:13px;font-weight:600;cursor:pointer;font-family:var(--font);display:flex;align-items:center;justify-content:center;gap:6px;border:1px solid var(--border);background:var(--card);color:var(--txt2);transition:all .15s;}
 .export-btn:active{filter:brightness(.92);transform:scale(.97);}
 .export-btn.primary{background:var(--teal-bg);color:var(--teal-text);border-color:var(--teal-border);}
+
+/* VACATION CARD */
+.vac-card{margin-top:10px;background:var(--card);border:1px solid var(--border);border-radius:var(--rs);overflow:hidden;cursor:pointer;}
+.vac-card:active{background:var(--bg);}
+.vac-main{display:flex;align-items:center;gap:8px;padding:11px 12px;}
+.vac-icon{font-size:18px;flex-shrink:0;}
+.vac-label{font-size:13px;font-weight:500;color:var(--txt2);flex:1;}
+.vac-val{font-family:var(--mono);font-size:15px;font-weight:600;}
+.vac-chevron{font-size:10px;color:var(--txt3);margin-left:4px;}
+.vac-detail{padding:0 12px 12px;border-top:1px solid var(--border);}
+.vac-detail-row{display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border);font-size:13px;color:var(--txt2);}
+.vac-detail-row:last-child{border-bottom:none;}
+.vac-total{font-weight:600;color:var(--txt);}
+.vac-detail-edit{display:flex;align-items:center;gap:6px;}
+.vac-adj-btn{width:26px;height:26px;border-radius:6px;border:1px solid var(--border);background:var(--bg);cursor:pointer;font-size:16px;font-weight:500;color:var(--txt);display:flex;align-items:center;justify-content:center;font-family:var(--font);}
+.vac-adj-btn:active{background:var(--border);}
 
 /* REMINDER */
 .reminder-row{margin-top:8px;background:var(--card);border:1px solid var(--border);border-radius:var(--rs);overflow:hidden;}
@@ -221,8 +248,8 @@ body{font-family:var(--font);background:var(--bg);color:var(--txt);min-height:10
   .cal-day.weekend,.cal-day.holiday{background:#2E2020;}
   .cal-day.has-entry-office{background:#2A2010;}
 .cal-day.has-entry-home{background:#0A2025;}
-  .cal-day.has-note{background:#1E1830;}
-  .time-edit input[type=time],.time-edit input[type=date],.abe-row input[type=time],.abe-row input[type=date],.sf-row input[type=time],.sf-note-input,.sf-loc-btn{background:#2C2C2C;color:#F0EDE8;}
+  .cal-day.has-note{background:#2A2A28;}
+  .time-edit input[type=time],.time-edit input[type=date],.abe-row input[type=time],.abe-row input[type=date],.sf-row input[type=time],.sf-note-input,.sf-loc-btn,.sf-hours-btn{background:#2C2C2C;color:#F0EDE8;}
 }
 </style>
 </head>
@@ -332,6 +359,8 @@ let userName='';
 let calYear=new Date().getFullYear(), calMonth=new Date().getMonth();
 
 let reminderOn=false, reminderHour='09', reminderMin='00';
+// vacationData: per year {carryoverDays, carryoverHours, baseDays=25}
+let vacationData={};
 
 try{
   const s=JSON.parse(localStorage.getItem('dochazka_v3')||'{}');
@@ -339,11 +368,20 @@ try{
   reminderOn=s.reminderOn||false;
   reminderHour=s.reminderHour||'09';
   reminderMin=s.reminderMin||'00';
+  vacationData=s.vacationData||{};
 }catch(e){}
+
+// autoCarryOver called after function definitions — see below
 
 const fmt=d=>d.getHours().toString().padStart(2,'0')+':'+d.getMinutes().toString().padStart(2,'0');
 function fmtDur(m){const h=Math.floor(m/60),r=m%60;return h+'h'+(r?r+'m':'');}
 function fmtDurLong(m){const h=Math.floor(m/60),r=m%60;return h+' hod'+(r?' '+r+' min':'');}
+function fmtOvertime(m){
+  const sign=m>=0?'+':'-';
+  const abs=Math.abs(m);
+  const h=Math.floor(abs/60),r=abs%60;
+  return sign+(h>0?h+'h':'')+(r>0?r+'m':'')+(h===0&&r===0?'0h':'');
+}
 function calcMin(a,d){if(!a||!d)return 0;const[ah,am]=a.split(':').map(Number),[dh,dm]=d.split(':').map(Number);return(dh*60+dm)-(ah*60+am);}
 function nowStr(){return fmt(new Date());}
 function toIso(d){return d.getFullYear()+'-'+(d.getMonth()+1).toString().padStart(2,'0')+'-'+d.getDate().toString().padStart(2,'0');}
@@ -353,7 +391,10 @@ function dateLabel(n){return n.getDate()+'. '+MONTHS_LABEL[n.getMonth()];}
 function dayLabel(n){return DAYS[n.getDay()].slice(0,2);}
 
 function persist(){
-  try{localStorage.setItem('dochazka_v3',JSON.stringify({active,entries:entries.slice(0,500),notes,userName,reminderOn,reminderHour,reminderMin}));}catch(e){}
+  try{localStorage.setItem('dochazka_v3',JSON.stringify({active,entries:entries.slice(0,500),notes,userName,reminderOn,reminderHour,reminderMin,vacationData}));}catch(e){}
+}
+function persistVacation(){
+  try{localStorage.setItem('dochazka_v3',JSON.stringify({active,entries:entries.slice(0,500),notes,userName,reminderOn,reminderHour,reminderMin,vacationData}));}catch(e){}
 }
 
 // ── TABS ──
@@ -466,6 +507,62 @@ function confirmDeparture(){
 }
 
 // ── CALENDAR ──
+// ── VACATION HELPERS ──
+function getVacData(year){
+  return vacationData[year]||{carryoverDays:0,carryoverHours:0,baseDays:25,carryoverSet:false};
+}
+// Returns total vacation in hours for a year
+function calcVacationTotal(year){
+  const v=getVacData(year);
+  return (v.baseDays*8)+(v.carryoverDays*8)+v.carryoverHours;
+}
+// Returns used vacation in hours for a year (from notes)
+function calcVacationUsed(year){
+  let usedHours=0;
+  notes.forEach(n=>{
+    if(!n.isoDate||n.type!=='vacation')return;
+    const y=+n.isoDate.split('-')[0];
+    if(y!==year)return;
+    // exemptedHours = hours taken; if 0 but type is vacation, assume full day (8h)
+    usedHours+=(n.exemptedHours||8);
+  });
+  return usedHours;
+}
+// Returns remaining vacation in hours
+function calcVacationRemaining(year){
+  return calcVacationTotal(year)-calcVacationUsed(year);
+}
+function fmtVacHours(h){
+  if(h===0)return'0 dní';
+  const sign=h<0?'−':'';
+  const abs=Math.abs(h);
+  const days=Math.floor(abs/8);
+  const hours=abs%8;
+  let s=sign;
+  if(days>0)s+=days+(days===1?' den':days<5?' dny':' dní');
+  if(hours>0)s+=(days>0?' ':'')+hours+'h';
+  return s;
+}
+
+// Auto-carry-over on new year
+(function autoCarryOver(){
+  const today=new Date();
+  const thisYear=today.getFullYear();
+  const vThis=vacationData[thisYear]||{};
+  if(!vThis.carryoverSet){
+    const remH=calcVacationRemaining(thisYear-1);
+    const remDays=remH>=0?Math.floor(remH/8):Math.ceil(remH/8);
+    const remHours=remH%8;
+    vacationData[thisYear]={
+      carryoverDays:remDays,
+      carryoverHours:remHours,
+      baseDays:vThis.baseDays||25,
+      carryoverSet:true
+    };
+    try{persistVacation();}catch(e){}
+  }
+})();
+
 function renderCalendar(){
   const holidays=getCzechHolidays(calYear);
   const daysInMonth=new Date(calYear,calMonth+1,0).getDate();
@@ -490,6 +587,32 @@ function renderCalendar(){
       if(e.loc==='office')officeDays++;else homeDays++;
     }
   });
+
+  // overtime for the displayed month (same logic as export: netto - 30min lunch, vacation/sick = neutral 8h netto)
+  let monthOvertimeMins=0;
+  {
+    const daysInMonthCalc=new Date(calYear,calMonth+1,0).getDate();
+    for(let dd=1;dd<=daysInMonthCalc;dd++){
+      const isoCalc=calYear+'-'+(calMonth+1).toString().padStart(2,'0')+'-'+dd.toString().padStart(2,'0');
+      const dowCalc=new Date(calYear,calMonth,dd).getDay();
+      const isWeCalc=dowCalc===0||dowCalc===6;
+      const mmddCalc=(calMonth+1).toString().padStart(2,'0')+'-'+dd.toString().padStart(2,'0');
+      const isHolidayCalc=holidays.has(mmddCalc);
+      const entryCalc=entryMap[isoCalc];
+      const noteCalc=noteMap[isoCalc];
+      if(isWeCalc||isHolidayCalc) continue; // weekends/holidays don't count toward overtime
+      const workMinsCalc=entryCalc?calcMin(entryCalc.arrival,entryCalc.departure):0;
+      const nettoMinsCalc=workMinsCalc>0?Math.max(0,workMinsCalc-30):0;
+      if(noteCalc&&noteCalc.type==='vacation'){
+        continue; // vacation always neutral, skip entirely
+      }
+      const exemptedMinsCalc=noteCalc?(noteCalc.exemptedHours||0)*60:0;
+      const effectiveMinsCalc=nettoMinsCalc+exemptedMinsCalc;
+      if(effectiveMinsCalc>0||exemptedMinsCalc>0){
+        monthOvertimeMins+=(effectiveMinsCalc-480);
+      }
+    }
+  }
 
   // year tabs — show prev/current/next year + any years with entries
   const thisYear=new Date().getFullYear();
@@ -535,23 +658,44 @@ function renderCalendar(){
     const note=noteMap[iso];
     const isToday=iso===today;
 
+    const noteLabelsCal={vacation:'Dovolená',sick:'Nemoc',doctor:'Lékař',trip:'Služební cesta',third:'Třetí strana',custom:''};
+    const noteIconsCal={vacation:'🏖',sick:'🤒',doctor:'🏥',trip:'✈️',third:'🤝',custom:'📝'};
+
     let cls='cal-day';
+    let styleAttr='';
     if(isWe||isHoliday) cls+=' weekend';
     if(isHoliday) cls+=' holiday';
-    if(entry) cls+=(entry.loc==='office'?' has-entry-office':' has-entry-home');
-    else if(note) cls+=' has-note';
+
+    if(entry&&note){
+      // Mixed day: work + absence — diagonal split background by ratio
+      const workMins=calcMin(entry.arrival,entry.departure);
+      const absMins=(note.exemptedHours||0)*60;
+      const totalMins=Math.max(workMins+absMins,1);
+      const pct=Math.round((workMins/totalMins)*100);
+      const workColor=entry.loc==='office'?'#FDF0C0':'#C8EDEF';
+      cls+=(entry.loc==='office'?' has-mixed-office':' has-mixed-home');
+      styleAttr=' style="background:linear-gradient(135deg, '+workColor+' 0%, '+workColor+' '+pct+'%, #EFEDE6 '+pct+'%, #EFEDE6 100%);"';
+    } else if(entry){
+      cls+=(entry.loc==='office'?' has-entry-office':' has-entry-home');
+    } else if(note){
+      cls+=' has-note';
+    }
     if(isToday) cls+=' today';
 
-    html+='<div class="'+cls+'" onclick="openDay(\''+iso+'\')">';
+    html+='<div class="'+cls+'"'+styleAttr+' onclick="openDay(\''+iso+'\')">';
     html+='<div class="cd-num">'+d+'</div>';
     if(entry){
       html+='<div class="cd-arr">↪'+entry.arrival+'</div>';
       html+='<div class="cd-dep">↩'+entry.departure+'</div>';
-      const mins=calcMin(entry.arrival,entry.departure);
-      if(mins>0)html+='<div class="cd-dur">'+fmtDur(mins)+'</div>';
-    } else if(note){
-      const icons={vacation:'🏖',sick:'🤒',trip:'✈️',custom:'📝'};
-      html+='<div class="cd-note">'+(icons[note.type]||'📝')+' '+(note.text||note.type)+'</div>';
+      if(!note){
+        const mins=calcMin(entry.arrival,entry.departure);
+        if(mins>0)html+='<div class="cd-dur">'+fmtDur(mins)+'</div>';
+      }
+    }
+    if(note){
+      const lbl=noteLabelsCal[note.type]||'Poznámka';
+      const hrs=note.exemptedHours?' '+note.exemptedHours+'h':'';
+      html+='<div class="cd-note">'+(noteIconsCal[note.type]||'📝')+' '+lbl+'<br>'+(hrs?hrs.trim():'')+'</div>';
     }
     if(isHoliday&&!entry&&!note){
       const hname=HOLIDAY_NAMES[mmdd]||'Svátek';
@@ -563,15 +707,45 @@ function renderCalendar(){
 
   // summary
   html+='<div class="cal-summary">';
-  html+='<div class="cal-sum-item"><div class="cal-sum-val">'+fmtDurLong(totalMins)+'</div><div class="cal-sum-lbl">Odpracováno</div></div>';
+  const overtimeStr=fmtOvertime(monthOvertimeMins);
+  const overtimeColor=monthOvertimeMins<0?'var(--red)':monthOvertimeMins>0?'var(--teal)':'var(--txt3)';
+  html+='<div class="cal-sum-item"><div class="cal-sum-val">'+fmtDurLong(totalMins)+' <span style="font-size:11px;font-weight:600;color:'+overtimeColor+'">('+overtimeStr+')</span></div><div class="cal-sum-lbl">Odpracováno</div></div>';
   html+='<div class="cal-sum-item"><div class="cal-sum-val">'+officeDays+'</div><div class="cal-sum-lbl">Kancelář</div></div>';
   html+='<div class="cal-sum-item"><div class="cal-sum-val">'+homeDays+'</div><div class="cal-sum-lbl">Homeoffice</div></div>';
   html+='</div>';
 
   // export buttons
+  // Vacation card
+  const vacTotal=calcVacationTotal(calYear);
+  const vacUsed=calcVacationUsed(calYear);
+  const vacRemaining=calcVacationRemaining(calYear);
+  const vacIsExpanded=(window._vacExpanded===calYear);
+  const vd=getVacData(calYear);
+  const vacColor=vacRemaining<0?'var(--red)':vacRemaining<80?'var(--gold)':'var(--teal)';
+
+  html+='<div class="vac-card" onclick="toggleVacCard()">';
+  html+='<div class="vac-main">';
+  html+='<span class="vac-icon">🏖</span>';
+  html+='<span class="vac-label">Zbývá dovolená</span>';
+  html+='<span class="vac-val" style="color:'+vacColor+'">'+fmtVacHours(vacRemaining)+'</span>';
+  html+='<span class="vac-chevron">'+(vacIsExpanded?'▲':'▼')+'</span>';
+  html+='</div>';
+  if(vacIsExpanded){
+    html+='<div class="vac-detail">';
+    html+='<div class="vac-detail-row"><span>Základ</span><span>'+vd.baseDays+' dní</span></div>';
+    html+='<div class="vac-detail-row"><span>Převod z '+(calYear-1)+'</span><span class="vac-detail-edit">';
+    html+='<button class="vac-adj-btn" onclick="adjCarryover(-1,0,event)">−</button>';
+    html+='<span id="vac-co-val">'+fmtVacHours(vd.carryoverDays*8+vd.carryoverHours)+'</span>';
+    html+='<button class="vac-adj-btn" onclick="adjCarryover(1,0,event)">+</button>';
+    html+='</span></div>';
+    html+='<div class="vac-detail-row"><span>Čerpáno '+calYear+'</span><span style="color:var(--red)">−'+fmtVacHours(vacUsed)+'</span></div>';
+    html+='<div class="vac-detail-row vac-total"><span>Zbývá</span><span style="color:'+vacColor+'">'+fmtVacHours(vacRemaining)+'</span></div>';
+    html+='</div>';
+  }
+  html+='</div>';
+
   html+='<div class="export-row">';
-  html+='<button class="export-btn primary" onclick="exportMonth()">📥 Export měsíce</button>';
-  html+='<button class="export-btn" onclick="exportYear()">📥 Celý rok</button>';
+  html+='<button class="export-btn primary" onclick="exportCalendar()">📥 Export kalendáře '+calYear+'</button>';
   html+='</div>';
 
   // reminder
@@ -623,10 +797,20 @@ function calNextMonth(){calMonth++;if(calMonth>11){calMonth=0;calYear++;}renderC
 
 // ── DAY SHEET ──
 let sheetIso=null;
-const NOTE_TYPES=[{k:'vacation',l:'🏖 Dovolená'},{k:'sick',l:'🤒 Nemoc'},{k:'trip',l:'✈️ Služební cesta'},{k:'custom',l:'📝 Vlastní'}];
+const NOTE_TYPES=[
+  {k:'vacation', l:'🏖 Dovolená',    defaultHours:8},
+  {k:'sick',     l:'🤒 Nemoc',       defaultHours:8},
+  {k:'doctor',   l:'🏥 Lékař',       defaultHours:0},
+  {k:'trip',     l:'✈️ Služební cesta', defaultHours:0},
+  {k:'third',    l:'🤝 Třetí strana', defaultHours:0},
+  {k:'custom',   l:'📝 Vlastní',     defaultHours:0},
+];
 
 function openDay(iso){
   sheetIso=iso;
+  const note=notes.find(n=>n.isoDate===iso);
+  _selectedNoteType=note?note.type:'';
+  _exemptedHours=note?note.exemptedHours||0:0;
   renderSheet();
   document.getElementById('sheet-overlay').classList.add('open');
   document.getElementById('day-sheet').classList.add('open');
@@ -674,12 +858,22 @@ function renderSheet(){
   html+='</div>';
 
   // absence note
+  const currentExempted = note ? (note.exemptedHours||0) : 0;
   html+='<div class="sf-label">Absence / poznámka</div>';
   html+='<div class="sf-note-chips">';
   NOTE_TYPES.forEach(nt=>{
     html+='<button class="sf-chip'+(currentNoteType===nt.k?' sel':'')+'" onclick="sheetToggleNote(\''+nt.k+'\')">'+nt.l+'</button>';
   });
   html+='</div>';
+  // Exempted hours control (shown when note type selected)
+  const showHours=!!currentNoteType;
+  html+='<div class="sf-hours-row" id="sf-hours-row" style="'+(showHours?'':'display:none')+'">';
+  html+='<span class="sf-hours-label">Omluvené hodiny</span>';
+  html+='<div class="sf-hours-ctrl">';
+  html+='<button class="sf-hours-btn" onclick="changeHours(-0.5)">−</button>';
+  html+='<span class="sf-hours-val" id="sf-hours-val">'+(currentExempted||0)+'h</span>';
+  html+='<button class="sf-hours-btn" onclick="changeHours(0.5)">+</button>';
+  html+='</div></div>';
   html+='<textarea class="sf-note-input" id="sf-note-text" rows="2" placeholder="Vlastní poznámka…">'+(note?note.text||'':'')+'</textarea>';
 
   html+='<button class="sheet-save" onclick="saveDay()">Uložit</button>';
@@ -722,6 +916,31 @@ function renderSheetChips(toggle){
     const btn=document.querySelector('.sf-chip[onclick="sheetToggleNote(\''+nt.k+'\')"]');
     if(btn) btn.className='sf-chip'+(_selectedNoteType===nt.k?' sel':'');
   });
+  // Show/hide hours row and set default
+  const row=document.getElementById('sf-hours-row');
+  if(row){
+    if(_selectedNoteType){
+      row.style.display='flex';
+      // Set default hours if currently 0
+      const valEl=document.getElementById('sf-hours-val');
+      if(valEl&&valEl.textContent==='0h'){
+        const nt=NOTE_TYPES.find(n=>n.k===_selectedNoteType);
+        if(nt&&nt.defaultHours>0){
+          _exemptedHours=nt.defaultHours;
+          valEl.textContent=_exemptedHours+'h';
+        }
+      }
+    } else {
+      row.style.display='none';
+    }
+  }
+}
+
+let _exemptedHours=0;
+function changeHours(delta){
+  _exemptedHours=Math.max(0,Math.min(24,(_exemptedHours||0)+delta));
+  const el=document.getElementById('sf-hours-val');
+  if(el) el.textContent=_exemptedHours+'h';
 }
 
 function saveDay(){
@@ -745,15 +964,15 @@ function saveDay(){
   }
 
   // save/update note
-  if(noteType||noteText){
+  if(noteType||noteText||_exemptedHours>0){
     const ni=notes.findIndex(n=>n.isoDate===sheetIso);
-    const rec={isoDate:sheetIso,type:noteType||'custom',text:noteText};
+    const rec={isoDate:sheetIso,type:noteType||'custom',text:noteText,exemptedHours:_exemptedHours};
     if(ni>=0) notes[ni]=rec; else notes.push(rec);
   } else {
     notes=notes.filter(n=>n.isoDate!==sheetIso);
   }
 
-  _selectedNoteType='';
+  _selectedNoteType='';_exemptedHours=0;
   persist();closeSheet();renderCalendar();toast('Uloženo ✓');
 }
 
@@ -791,11 +1010,32 @@ function buildMonthData(year, month){
     if(mins>0) totalMins+=mins;
 
     const hname = HOLIDAY_NAMES[mmdd]||'';
+    const noteLabels={vacation:'Dovolená',sick:'Nemoc',doctor:'Lékař',trip:'Služební cesta',third:'Práce pro třetí stranu',custom:''};
     let poznamka = '';
-    if(note){ const icons={vacation:'Dovolená',sick:'Nemoc',trip:'Služební cesta',custom:''}; poznamka=(icons[note.type]||'')+( note.text?' '+note.text:''); }
-    else if(isHoliday) poznamka = hname;
+    let exemptedHours = 0;
+    if(note){
+      const lbl=noteLabels[note.type]||'';
+      const hrs=note.exemptedHours>0?' '+note.exemptedHours+'h':'';
+      const txt=note.text?' – '+note.text:'';
+      poznamka=lbl+hrs+txt;
+      exemptedHours=note.exemptedHours||0;
+    } else if(isHoliday) poznamka = hname;
 
     const nettoMins = mins>0 ? Math.max(0, mins-30) : 0;
+    // Effective mins for overtime: netto + exempted (in mins), capped per day
+    const exemptedMins = exemptedHours*60;
+    const effectiveMins = nettoMins + exemptedMins;
+    // Overtime: effective - 8h (480 min). Vacation = neutral (0)
+    let overtimeMins = 0;
+    if(note&&note.type==='vacation'){
+      overtimeMins = 0; // always neutral
+    } else if(!isWe&&!isHoliday){
+      // Only count overtime on working days
+      if(effectiveMins>0||exemptedMins>0){
+        overtimeMins = effectiveMins - 480;
+      }
+    }
+
     rows.push({
       iso, d, dayName, isWe, isHoliday,
       datum: d+'. '+(month+1)+'. '+year,
@@ -806,6 +1046,10 @@ function buildMonthData(year, month){
       odpracovanoMins: mins,
       netto: nettoMins>0 ? fmtDurLong(nettoMins) : '',
       nettoMins,
+      exemptedHours,
+      exemptedStr: exemptedHours>0 ? exemptedHours+'h' : '',
+      overtimeMins,
+      overtimeStr: (!isWe&&!isHoliday&&(effectiveMins>0||exemptedMins>0)) ? fmtOvertime(overtimeMins) : '',
       misto: entry ? (entry.loc==='office'?'Kancelář':'Homeoffice') : '',
       poznamka
     });
@@ -817,61 +1061,79 @@ function mkFill(rgb){return {patternType:'solid',fgColor:{rgb},bgColor:{indexed:
 function mkBorder(c){const s={style:'thin',color:{rgb:c}};return{top:s,bottom:s,left:s,right:s};}
 
 function applySheetStyles(ws, rows, startRow){
-  const OFFICE_BG = 'FDF0C0';  // gold-bg
-  const HOME_BG   = 'C8EDEF';  // teal-bg
-  const WE_BG     = 'FEE8E8';  // red light
-  const HOLIDAY_BG= 'FFCCCC';  // red stronger
-  const HEADER_BG = '1A1A1A';  // black
-  const TOTAL_BG  = 'F5EDD0';  // gold total
-  const EMPTY_BG  = 'FFFFFF';
+  const cols=['A','B','C','D','E','F','G','H','I','J'];
 
-  const cols = ['A','B','C','D','E','F','G','H'];
-  ws['!cols'] = [14,12,9,9,16,16,14,30].map(w=>({wch:w}));
+  // Title row — white bg, black bold
+  if(ws['A1']) ws['A1'].s={fill:mkFill('FFFFFF'),font:{name:'Verdana',sz:13,bold:true,color:{rgb:'1A1A1A'}},alignment:{horizontal:'left',vertical:'center'}};
+  // Subtitle — white bg, gray italic
+  if(ws['A2']&&ws['A2'].v) ws['A2'].s={fill:mkFill('FFFFFF'),font:{name:'Verdana',sz:9,italic:true,color:{rgb:'666666'}},alignment:{horizontal:'left',vertical:'center'}};
+  // Empty row 3
+  cols.forEach(col=>{const r=col+'3';if(!ws[r])ws[r]={t:'s',v:''};ws[r].s={fill:mkFill('FFFFFF'),border:mkBorder('FFFFFF'),font:{name:'Verdana',sz:6}};});
 
-  // Header
+  // Header row — gold bg, black bold
   cols.forEach(col=>{
-    const ref = col+startRow;
-    if(!ws[ref]) ws[ref]={t:'s',v:''};
-    ws[ref].s = {
-      fill:mkFill(HEADER_BG),
-      font:{bold:true,color:{rgb:'FFFFFF'},sz:10},
-      alignment:{horizontal:'center',vertical:'center'},
-      border:mkBorder('333333')
-    };
+    const ref=col+startRow;
+    if(!ws[ref])ws[ref]={t:'s',v:''};
+    ws[ref].s={fill:mkFill('C8A450'),font:{name:'Verdana',sz:9,bold:true,color:{rgb:'1A1A1A'}},alignment:{horizontal:'center',vertical:'center'},border:mkBorder('B8942A')};
   });
 
   // Data rows
   rows.forEach((row,i)=>{
-    const r = startRow+1+i;
-    let bg = EMPTY_BG;
-    if(row.isHoliday) bg = HOLIDAY_BG;
-    else if(row.isWe) bg = WE_BG;
-    else if(row.misto==='Kancelář') bg = OFFICE_BG;
-    else if(row.misto==='Homeoffice') bg = HOME_BG;
+    const r=startRow+1+i;
+    const rowBg=(row.isWe||row.isHoliday)?'FEF5F5':'FFFFFF';
+    const border=mkBorder('ECECEC');
 
-    cols.forEach(col=>{
-      const ref = col+r;
-      if(!ws[ref]) ws[ref]={t:'s',v:''};
-      ws[ref].s = {
-        fill:mkFill(bg),
-        font:{sz:10, bold:(col==='A'||col==='B')},
-        alignment:{horizontal:(col==='A'||col==='B')?'left':'center',vertical:'center'},
-        border:mkBorder('DDDDDD')
-      };
+    cols.forEach((col,ci)=>{
+      const ref=col+r;
+      if(!ws[ref])ws[ref]={t:'s',v:''};
+      const val=String(ws[ref].v||'');
+
+      // Default style
+      let font={name:'Verdana',sz:9,color:{rgb:'1A1A1A'}};
+      if(ci<2) font.bold=true;
+
+      // Colored text by column and value
+      if(ci===1&&(row.isWe||row.isHoliday)){
+        font.color={rgb:'B83030'};font.bold=true;
+      } else if(ci===7&&val){ // Přesčas
+        const neg=val.startsWith('-')||val.startsWith('−');
+        font.color={rgb:neg?'B83030':(val==='+0h'||val==='0h')?'777777':'1A6B3A'};
+        font.bold=true;
+      } else if(ci===8&&val){ // Místo
+        font.color={rgb:val==='Kancelář'?'9A7010':val==='Homeoffice'?'006B78':'1A1A1A'};
+        font.bold=true;
+      } else if(ci===6&&val){ // Omluveno
+        font.color={rgb:'777777'};font.bold=true;
+      } else if(ci===9&&val){ // Poznámka
+        // vacation = gold, others = gray
+        const isVac=val.toLowerCase().includes('dovolená');
+        font.color={rgb:isVac?'9A7010':'777777'};
+      }
+
+      ws[ref].s={fill:mkFill(rowBg),font,alignment:{horizontal:ci<2?'left':'center',vertical:'center'},border};
     });
   });
 
-  // Total row
-  const totalR = startRow+1+rows.length;
-  cols.forEach(col=>{
-    const ref = col+totalR;
-    if(!ws[ref]) ws[ref]={t:'s',v:''};
-    ws[ref].s = {
-      fill:mkFill(TOTAL_BG),
-      font:{bold:true,sz:10},
-      alignment:{horizontal:(col==='A'||col==='B')?'left':'center',vertical:'center'},
-      border:{top:{style:'medium',color:{rgb:'888888'}},bottom:{style:'thin',color:{rgb:'AAAAAA'}},left:{style:'thin',color:{rgb:'DDDDDD'}},right:{style:'thin',color:{rgb:'DDDDDD'}}}
-    };
+  // Sum row
+  const sumR=startRow+1+rows.length;
+  cols.forEach((col,ci)=>{
+    const ref=col+sumR;
+    if(!ws[ref])ws[ref]={t:'s',v:''};
+    const val=String(ws[ref].v||'');
+    let font={name:'Verdana',sz:9,bold:true,color:{rgb:'1A1A1A'}};
+    if(ci===7&&val){
+      const neg=val.startsWith('-')||val.startsWith('−');
+      font.color={rgb:neg?'B83030':'1A6B3A'};
+    }
+    ws[ref].s={fill:mkFill('FAFAFA'),font,alignment:{horizontal:ci<2?'left':'center',vertical:'center'},border:{top:{style:'medium',color:{rgb:'C8A450'}},bottom:{style:'thin',color:{rgb:'ECECEC'}},left:{style:'thin',color:{rgb:'ECECEC'}},right:{style:'thin',color:{rgb:'ECECEC'}}}};
+  });
+
+  // YTD row
+  const ytdR=startRow+2+rows.length;
+  cols.forEach((col,ci)=>{
+    const ref=col+ytdR;
+    if(!ws[ref])ws[ref]={t:'s',v:''};
+    ws[ref].s={fill:mkFill('FAFAFA'),font:{name:'Verdana',sz:9,bold:true,color:{rgb:'1A1A1A'}},alignment:{horizontal:ci<2?'left':'center',vertical:'center'},border:mkBorder('ECECEC')};
   });
 }
 
@@ -881,67 +1143,84 @@ function buildWorksheet(year, month){
   const wsData = [];
 
   // Title rows
-  wsData.push([MONTHS_CZ[month]+' '+year,'','','','','','','']);
-  wsData.push([userName?'Zaměstnanec: '+userName:'','','','','','','','']);
+  wsData.push([MONTHS_CZ[month]+' '+year,'','','','','','','','','']);
+  wsData.push([userName?'Zaměstnanec: '+userName:'','','','','','','','','']);
   wsData.push([]); // empty
   // Header
-  wsData.push(['Datum','Den','Příchod','Odchod','Odpracováno','Netto (−30 min)','Místo','Poznámka']);
+  wsData.push(['Datum','Den','Příchod','Odchod','Odpracováno','Netto (−30 min)','Omluveno','Přesčasy','Místo','Poznámka']);
   // Data rows
   rows.forEach(row=>{
-    wsData.push([row.datum, row.den, row.prichod, row.odchod, row.odpracovano, row.netto, row.misto, row.poznamka]);
+    wsData.push([row.datum, row.den, row.prichod, row.odchod, row.odpracovano, row.netto, row.exemptedStr, row.overtimeStr, row.misto, row.poznamka]);
   });
   // Total
   const totalNetto=rows.reduce((s,r)=>s+r.nettoMins,0);
-  wsData.push(['CELKEM','','','',fmtDurLong(totalMins),fmtDurLong(totalNetto),'','']);
+  const totalOvertime=rows.reduce((s,r)=>s+r.overtimeMins,0);
+  // Cumulative overtime YTD (sum all months up to this one)
+  let ytdOvertime=0;
+  for(let m2=0;m2<=month;m2++){
+    try{
+      const {rows:r2}=buildMonthData(year,m2);
+      ytdOvertime+=r2.reduce((s,r)=>s+(r.overtimeMins||0),0);
+    }catch(e){console.warn('ytd error m='+m2,e);}
+  }
+  wsData.push(['SOUČET MĚSÍCE','','','',fmtDurLong(totalMins),fmtDurLong(totalNetto),'',fmtOvertime(totalOvertime),'','']);
+  wsData.push(['KUMULATIVNÍ PŘESČASY YTD','','','','','','',fmtOvertime(ytdOvertime),'','']);
 
+  if(!wsData||wsData.length===0){console.error('wsData empty for',year,month);return XLSX.utils.aoa_to_sheet([[]]);}
   const ws = XLSX.utils.aoa_to_sheet(wsData);
 
   // Merges: title + subtitle
   ws['!merges'] = [
-    {s:{r:0,c:0},e:{r:0,c:7}},
-    {s:{r:1,c:0},e:{r:1,c:7}}
+    {s:{r:0,c:0},e:{r:0,c:9}},
+    {s:{r:1,c:0},e:{r:1,c:9}}
   ];
 
-  // Title style
-  if(ws['A1']) ws['A1'].s = {
-    font:{bold:true,sz:14,color:{rgb:'1A1A1A'}},
-    alignment:{horizontal:'left',vertical:'center'}
-  };
-  // Subtitle (name) style
-  if(ws['A2']&&ws['A2'].v) ws['A2'].s = {
-    font:{sz:10,color:{rgb:'6B6B6B'},italic:true},
-    alignment:{horizontal:'left',vertical:'center'}
-  };
+  // Title and subtitle styles applied in applySheetStyles
 
   // Apply row styles (header is now row 4 = Excel row index 3+1=4)
+  // Dynamic column widths based on content
+  const colDefs = [14,10,9,9,14,14,10,12,13,30]; // default widths
+  wsData.forEach(row=>{
+    row.forEach((cell,ci)=>{
+      if(cell==null) return;
+      const len = String(cell).length;
+      if(len > (colDefs[ci]||0)) colDefs[ci] = Math.min(len+2, 80);
+    });
+  });
+  ws['!cols'] = colDefs.map(w=>({wch:w}));
   applySheetStyles(ws, rows, 4);
 
   // Row heights
-  ws['!rows'] = [{hpt:24},{hpt:14},{hpt:6},{hpt:18},...rows.map(()=>({hpt:18})),{hpt:20}];
+  ws['!rows'] = [{hpt:22},{hpt:14},{hpt:4},{hpt:18},...rows.map(()=>({hpt:18})),{hpt:20},{hpt:18}];
 
   return ws;
 }
 
-function exportMonth(){
+function exportCalendar(){
   if(typeof XLSX==='undefined'){toast('Načítám knihovnu…');return;}
-  const MONTHS_CZ=['Leden','Únor','Březen','Duben','Květen','Červen','Červenec','Srpen','Září','Říjen','Listopad','Prosinec'];
-  const wb = XLSX.utils.book_new();
-  const ws = buildWorksheet(calYear, calMonth);
-  XLSX.utils.book_append_sheet(wb, ws, MONTHS_CZ[calMonth]);
-  XLSX.writeFile(wb, 'dochazka_'+calYear+'_'+(calMonth+1).toString().padStart(2,'0')+'.xlsx', {cellStyles:true});
-  toast('Export stažen ✓');
-}
-
-function exportYear(){
-  if(typeof XLSX==='undefined'){toast('Načítám knihovnu…');return;}
-  const MONTHS_CZ=['Leden','Únor','Březen','Duben','Květen','Červen','Červenec','Srpen','Září','Říjen','Listopad','Prosinec'];
-  const wb = XLSX.utils.book_new();
-  for(let m=0;m<12;m++){
-    const ws = buildWorksheet(calYear, m);
-    XLSX.utils.book_append_sheet(wb, ws, MONTHS_CZ[m]);
+  try{
+    const MONTHS_CZ=['Leden','Únor','Březen','Duben','Květen','Červen','Červenec','Srpen','Září','Říjen','Listopad','Prosinec'];
+    const wb = XLSX.utils.book_new();
+    for(let m=0; m<12; m++){
+      const ws = buildWorksheet(calYear, m);
+      XLSX.utils.book_append_sheet(wb, ws, MONTHS_CZ[m]);
+    }
+    const monthNum = (calMonth+1).toString().padStart(2,'0');
+    const namePart = userName ? '_'+userName.replace(/\s+/g,'_') : '';
+    const filename = 'Dochazka_'+monthNum+'_'+calYear+namePart+'.xlsx';
+    // Active sheet: mark via SheetNames index
+    wb.Workbook = wb.Workbook||{};
+    wb.Workbook.Sheets = Array.from({length:12},(_,i)=>({
+      Hidden:0,
+      Selected: i===calMonth ? 1 : 0
+    }));
+    wb.Workbook.WBView = [{activeTab:calMonth, FirstSheet:0}];
+    XLSX.writeFile(wb, filename, {cellStyles:true});
+    toast('Export stažen ✓');
+  }catch(err){
+    console.error('Export error:',err);
+    toast('Chyba exportu: '+err.message);
   }
-  XLSX.writeFile(wb, 'dochazka_'+calYear+'.xlsx', {cellStyles:true});
-  toast('Export roku stažen ✓');
 }
 
 // ── REMINDER ──
@@ -1033,6 +1312,26 @@ function cancelReminder(){
 
 // Re-schedule on load if reminder is on
 if(reminderOn) setTimeout(scheduleReminder, 1000);
+
+// ── VACATION CARD ──
+window._vacExpanded=null;
+function toggleVacCard(){
+  window._vacExpanded=(window._vacExpanded===calYear)?null:calYear;
+  renderCalendar();
+}
+function adjCarryover(deltaDays, deltaHours, e){
+  if(e)e.stopPropagation();
+  const v=getVacData(calYear);
+  let totalH=(v.carryoverDays*8)+(v.carryoverHours||0)+(deltaDays*8)+deltaHours;
+  // Allow negative carryover (debt from previous year)
+  vacationData[calYear]={
+    ...v,
+    carryoverDays:Math.floor(totalH/8),
+    carryoverHours:totalH%8,
+    carryoverSet:true
+  };
+  persist();renderCalendar();
+}
 
 function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500);}
 
